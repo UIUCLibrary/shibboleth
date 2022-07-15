@@ -225,7 +225,7 @@ class ShibbolethSettingsForm extends Form {
 			if($userId){
 				// and if they are not already an admin
 				if(!$userGroupDao->userInGroup($userId, $adminId)) {
-					syslog(LOG_INFO, "Shibboleth assigning admin to user identified by $userId");
+					error_log( "Shibboleth assigning admin to user identified by $userId");
 					$userGroupDao->assignUserToGroup($userId, $adminId);
 				}
 			}
@@ -238,7 +238,7 @@ class ShibbolethSettingsForm extends Form {
 			$userId = $this->getUserId($uin);
 
 			if($userId) {
-				syslog(LOG_INFO, "Shibboleth removing admin user identified by $userId");
+				error_log( "Shibboleth removing admin user identified by $userId");
 				$userGroupDao->removeUserFromGroup($userId, $adminId, 0);
 			}
 		}
@@ -249,8 +249,11 @@ class ShibbolethSettingsForm extends Form {
 		$user = false;
 		if(str_contains($uin, '@') ){
 			$user = $userDao->getUserByEmail($uin);
+			error_log('user was fetched using email');
 		} else {
 			$user = $userDao->getUserByAuthStr($uin, true);
+			error_log('user was fetched auth string');
+
 		}
 		return $user;
 	}
