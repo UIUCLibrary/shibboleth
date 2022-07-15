@@ -250,9 +250,11 @@ class ShibbolethSettingsForm extends Form {
 		if(str_contains($uin, '@') ){
 			$user = $userDao->getUserByEmail($uin);
 			error_log('user was fetched using email');
+			$user = $user->getId();
 		} else {
 			$user = $userDao->getUserByAuthStr($uin, true);
 			error_log('user was fetched auth string');
+			$user = $user->getId();
 
 		}
 		return $user;
