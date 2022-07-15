@@ -153,6 +153,11 @@ class ShibbolethSettingsForm extends Form {
 			trim($this->getData('shibbolethHeaderMailing'), "\"\';"),
 			'string'
 		);
+
+		$oldAdminStr = $this->_plugin->getSetting($this->_contextId, 'shibbolethAdminUins');
+		$newAdminStr = trim($this->getData('shibbolethAdminUins'), "\"\';");
+		$this->updateAdmin($oldAdminStr,$newAdminStr);
+
 		$this->_plugin->updateSetting(
 			$this->_contextId,
 			'shibbolethAdminUins',
@@ -189,5 +194,64 @@ class ShibbolethSettingsForm extends Form {
 			$this->getData('shibbolethOptionalRegistrationDescription'),
 			'string'
 		);
+		$userDao = DAORegistry::getDAO('UserDAO');
+		$adminData = trim($this->getData('shibbolethAdminUins'), "\"\';");
+		$admins = explode(" ", $adminData);
+		foreach ($admins as $admin){
+
+		}
+	}
+
+	function updateAdmin($oldAdminStr, $newAdminStr) {
+
+		$oldAdmins = explode(' ', $oldAdminStr);
+		$newAdmins = explode(' ', $newAdminStr);
+
+		$addAdmins = array_diff($newAdmins, $oldAdmins);
+		$removeAdmins = array_diff_assoc($oldAdmins, $newAdmins);
+
+		$userGroupDao = DAORegistry::getDAO('UserGroupDAO');
+
+		// should be unique
+		$adminGroup = $userGroupDao->getByRoleId(0, ROLE_ID_SITE_ADMIN)->next();
+		$adminId = $adminGroup->getId();
+
+		//add users who were not already admins
+		foreach($addAdmins as $uin){
+
+			$userId = $this->getUserId($uin);
+
+			// if the uin entered in the form is associated with a user
+			if($userId){
+				// and if they are not already an admin
+				if(!$userGroupDao->userInGroup($userId, $adminId)) {
+					syslog(LOG_INFO, "Shibboleth assigning admin to user identified by $userId");
+					$userGroupDao->assignUserToGroup($userId, $adminId);
+				}
+			}
+
+
+		}
+
+		//remove users who are no longer in the form data
+		foreach($removeAdmins as $uin){
+			$userId = $this->getUserId($uin);
+
+			if($userId) {
+				syslog(LOG_INFO, "Shibboleth removing admin user identified by $userId");
+				$userGroupDao->removeUserFromGroup($userId, $adminId, 0);
+			}
+		}
+	}
+
+	private function getUserId($uin){
+		$userDao = DAORegistry::getDAO('UserDAO');
+		$user = false;
+		if(str_contains($uin, '@') ){
+			$user = $userDao->getUserByEmail($uin);
+		} else {
+			$user = $userDao->getUserByAuthStr($uin, true);
+		}
+		return $user;
 	}
 }
