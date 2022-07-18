@@ -246,17 +246,19 @@ class ShibbolethSettingsForm extends Form {
 
 	private function getUserId($uin){
 		$userDao = DAORegistry::getDAO('UserDAO');
-		$user = false;
-		if(str_contains($uin, '@') ){
+		if (str_contains($uin, '@') ) {
 			$user = $userDao->getUserByEmail($uin);
 			error_log('user was fetched using email');
-			$user = $user->getId();
 		} else {
 			$user = $userDao->getUserByAuthStr($uin, true);
 			error_log('user was fetched auth string');
-			$user = $user->getId();
-
 		}
-		return $user;
+		if ($user) {
+			$userId = $user->getId();
+		} else {
+			$userId = null;
+		}
+
+		return $userId;
 	}
 }
