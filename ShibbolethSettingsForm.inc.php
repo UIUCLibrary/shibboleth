@@ -229,17 +229,22 @@ class ShibbolethSettingsForm extends Form {
 					$userGroupDao->assignUserToGroup($userId, $adminId);
 				}
 			}
-
-
 		}
 
 		//remove users who are no longer in the form data
 		foreach($removeAdmins as $uin){
 			$userId = $this->getUserId($uin);
 
-			if($userId) {
-				error_log( "Shibboleth removing admin user identified by $userId");
-				$userGroupDao->removeUserFromGroup($userId, $adminId, 0);
+			//never remove the original global admin because other components assume userid = 1 is global admin
+			if($userId > 1) {
+					error_log( "Shibboleth removing admin user identified by $userId");
+					$userGroupDao->removeUserFromGroup($userId, $adminId, 0);
+			} elseif ($userId == 1) {
+				error_log( "Shibboleth can't removing admin user identified by
+					$userId because this is the original global admin");
+			} else {
+				$safe_input  =  strtolower_codesafe($uin);
+				error_log(  "no user found with input $safe_input");
 			}
 		}
 	}
