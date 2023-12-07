@@ -399,7 +399,8 @@ class ShibbolethHandler extends Handler {
 	function validate($requiredContexts = null, $request = null) {
 		import('lib.pkp.pages.user.RegistrationHandler');
 		if ( True ) {
-			return RegistrationHandler::validate($requiredContexts, $request);
+			$registrationHandler = new RegistrationHandler();
+			return $registrationHandler->validate($requiredContexts, $request);
 		} else {
 			return $this->_shibbolethRedirect($request);
 		}
