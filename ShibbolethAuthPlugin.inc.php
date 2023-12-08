@@ -16,6 +16,7 @@
  */
 
 use PKP\plugins\GenericPlugin;
+use PKP\plugins\Hook;
 define('SHIBBOLETH_PLUGIN_NAME', 'ShibbolethAuthPlugin');
 
 class ShibbolethAuthPlugin extends GenericPlugin {
@@ -52,10 +53,10 @@ class ShibbolethAuthPlugin extends GenericPlugin {
 		$this->addLocaleData();
 		if ($success && $this->getEnabled() && $this->isShibbolethConfigured()) {
 			// Register pages to handle login.
-			HookRegistry::register('LoadHandler',	array($this, 'handleRequest'));
+            Hook::add('LoadHandler',	array($this, 'handleRequest'));
 
 			// Register callback for smarty filters
-			HookRegistry::register('TemplateManager::display', array($this, 'handleTemplateDisplay'));
+            Hook::add('TemplateManager::display', array($this, 'handleTemplateDisplay'));
 		}
 		return $success;
 	}
