@@ -13,8 +13,7 @@
  * @brief Handle Shibboleth responses
  */
 
-import('classes.handler.Handler');
-
+use APP\handler\Handler;
 class ShibbolethHandler extends Handler {
 	/** @var ShibbolethAuthPlugin */
 	var $_plugin;
@@ -101,7 +100,7 @@ class ShibbolethHandler extends Handler {
 	/**
 	 * @copydoc ShibbolethHandler::activateUser()
 	 */
-	function lostPassword($args, $request) {	                
+	function lostPassword($args, $request) {
 		return $this->_shibbolethRedirect($request);
 	}
 
@@ -202,7 +201,7 @@ class ShibbolethHandler extends Handler {
 	function requestResetPassword($args, $request) {
 		return $this->_shibbolethRedirect($request);
 	}
-                                                                                              
+
 	/**
 	 * @copydoc ShibbolethHandler::activateUser()
 	 */
@@ -538,7 +537,7 @@ class ShibbolethHandler extends Handler {
 		$uin = $_SERVER[$uinHeader];
 		$userEmail = $_SERVER[$emailHeader];
 		$userFirstName = $_SERVER[$firstNameHeader];
-		
+
 
 		if (empty($uin) || empty($userEmail) || empty($userFirstName)) {
 			error_log("Shibboleth failed to find required fields for new user");
@@ -563,7 +562,7 @@ class ShibbolethHandler extends Handler {
 		$sitePrimaryLocale = $site->getPrimaryLocale();
 
 		$user->setGivenName($userFirstName, $sitePrimaryLocale);
-		
+
 		if (!empty($userLastName)) {
 			$user->setFamilyName($userLastName, $sitePrimaryLocale);
 		}
@@ -575,8 +574,8 @@ class ShibbolethHandler extends Handler {
 		}
 		if (!empty($userMailing)) {
 			$user->setMailingAddress($userMailing);
-		}		
-		
+		}
+
 
 		$user->setDateRegistered(Core::getCurrentDate());
 		$user->setPassword(

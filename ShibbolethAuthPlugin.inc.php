@@ -15,7 +15,7 @@
  * Assumes Apache mod_shib and appropriate configuration.
  */
 
-import('lib.pkp.classes.plugins.GenericPlugin');
+use PKP\plugins\GenericPlugin;
 define('SHIBBOLETH_PLUGIN_NAME', 'ShibbolethAuthPlugin');
 
 class ShibbolethAuthPlugin extends GenericPlugin {
@@ -222,7 +222,7 @@ class ShibbolethAuthPlugin extends GenericPlugin {
 
 	//
 	// Callback handler
-	// 
+	//
 	/**
 	 * Hook callback: register pages for each login method.
 	 * This URL is of the form: shibboleth/{$shibrequest}
@@ -231,14 +231,14 @@ class ShibbolethAuthPlugin extends GenericPlugin {
 	function handleRequest($hookName, $params) {
 		$page = $params[0];
 		$op = $params[1];
-		
+
 		// modify user login
 		$loginOps = ['index', 'signIn', 'signOut'];
 		if (!$this->_isShibbolethOptional()) {
 			// If Shibboleth is required, override password functionality
 			$loginOps = array_merge($loginOps, ['changePassword', 'lostPassword', 'requestResetPassword', 'savePassword']);
 		}
-		
+
 		if ($this->getEnabled()
 			&& ($page == 'shibboleth'
 				|| ($page == 'login'
@@ -267,7 +267,7 @@ class ShibbolethAuthPlugin extends GenericPlugin {
 	}
 
 	/**
-	 * Hook callback: register output filter for user registration 
+	 * Hook callback: register output filter for user registration
 	 *
 	 * @param $hookName string
 	 * @param $args array
@@ -290,7 +290,7 @@ class ShibbolethAuthPlugin extends GenericPlugin {
 		}
 		return false;
 	}
-	
+
 	function registrationFilter($output, $templateMgr) {
 		$isRegistration = True;
 		return $this->registrationAndLoginFilter($output, $templateMgr, $isRegistration);
@@ -300,7 +300,7 @@ class ShibbolethAuthPlugin extends GenericPlugin {
 		$isRegistration = False;
 		return $this::registrationAndLoginFilter($output, $templateMgr, $isRegistration);
 	}
-	
+
 	/**
 	 * Output filter adds Shibboleth interaction to registration and login form.
 	 *
@@ -361,7 +361,7 @@ class ShibbolethAuthPlugin extends GenericPlugin {
 	//
 	/**
 	 * Get the Shibboleth plugin object
-	 * 
+	 *
 	 * @return ShibbolethAuthPlugin
 	 */
 	function _getPlugin() {

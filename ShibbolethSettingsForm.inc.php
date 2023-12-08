@@ -14,8 +14,7 @@
  * authentication plugin settings
  */
 
-import('lib.pkp.classes.form.Form');
-
+use PKP\form\Form;
 class ShibbolethSettingsForm extends Form {
 
 	/** @var int */
