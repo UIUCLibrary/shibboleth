@@ -14,6 +14,7 @@
  */
 
 use APP\handler\Handler;
+use APP\facades\Repo;
 class ShibbolethHandler extends Handler {
 	/** @var ShibbolethAuthPlugin */
 	var $_plugin;
@@ -257,8 +258,7 @@ class ShibbolethHandler extends Handler {
 		}
 
 		// Try to locate the user by UIN.
-		$userDao = DAORegistry::getDAO('UserDAO');
-		$user = $userDao->getUserByAuthStr($uin, true);
+		$user = Repo::user()->getUserByAuthStr($uin, true);
 		if (isset($user)) {
 			syslog(LOG_INFO, "Shibboleth located returning user $uin");
 		} else {
@@ -271,7 +271,7 @@ class ShibbolethHandler extends Handler {
 				Validation::redirectLogin();
 				return false;
 			}
-			$user = $userDao->getUserByEmail($userEmail);
+			$user = Repo::user()->getUserByEmail($userEmail);
 
 			if (isset($user)) {
 				syslog(LOG_INFO, "Shibboleth located returning email $userEmail");
@@ -285,6 +285,13 @@ class ShibbolethHandler extends Handler {
 					return false;
 				} else {
 					$user->setAuthStr($uin);
+                    Repo::user()->
+                    Repo::user()->edit(
+                        $user,
+                        [
+
+                        ]
+                    );
 					$userDao->updateObject($user);
 				}
 			} else {
