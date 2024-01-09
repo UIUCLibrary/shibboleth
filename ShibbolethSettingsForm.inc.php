@@ -103,7 +103,7 @@ class ShibbolethSettingsForm extends Form {
 	/**
 	 * Save settings.
 	 */
-	function execute() {
+	function execute(...$functionArgs) {
 		$this->_plugin->updateSetting(
 			$this->_contextId,
 			'shibbolethWayfUrl',
@@ -188,5 +188,6 @@ class ShibbolethSettingsForm extends Form {
 			$this->getData('shibbolethOptionalRegistrationDescription'),
 			'string'
 		);
+        parent::execute(...$functionArgs);
 	}
 }
