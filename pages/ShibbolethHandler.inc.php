@@ -259,7 +259,7 @@ class ShibbolethHandler extends Handler {
 		}
 
 		// Try to locate the user by UIN.
-		$user = Repo::user()->getUserByAuthStr($uin, true);
+		$user = Repo::user()->get($uin, true);
 		if (isset($user)) {
 			syslog(LOG_INFO, "Shibboleth located returning user $uin");
 		} else {
@@ -272,7 +272,7 @@ class ShibbolethHandler extends Handler {
 				Validation::redirectLogin();
 				return false;
 			}
-			$user = Repo::user()->getUserByEmail($userEmail);
+			$user = Repo::user()->getByEmail($userEmail);
 
 			if (isset($user)) {
 				syslog(LOG_INFO, "Shibboleth located returning email $userEmail");
