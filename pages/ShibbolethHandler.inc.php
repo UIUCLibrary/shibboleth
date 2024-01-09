@@ -434,39 +434,39 @@ class ShibbolethHandler extends Handler {
 	 * @param $user User
 	 */
 	function _checkAdminStatus($user) {
-		$adminsStr = $this->_plugin->getSetting(
-			$this->_contextId,
-			'shibbolethAdminUins'
-		);
-		$admins = explode(' ', $adminsStr);
-
-		$uin = $user->getAuthStr();
-		if (empty($uin)) {
-			return;
-		}
-
-		$userId = $user->getId();
-		$adminFound = array_search($uin, $admins);
-
-		$userGroupDao = DAORegistry::getDAO('UserGroupDAO');
-
-		// should be unique
-		$adminGroup = $userGroupDao->getByRoleId(0, ROLE_ID_SITE_ADMIN)->next();
-		$adminId = $adminGroup->getId();
-
-		// If they are in the list of users who should be admins
-		if ($adminFound !== false) {
-			// and if they are not already an admin
-			if(!$userGroupDao->userInGroup($userId, $adminId)) {
-				syslog(LOG_INFO, "Shibboleth assigning admin to $uin");
-				$userGroupDao->assignUserToGroup($userId, $adminId);
-			}
-		} else {
-			// If they are not in the admin list - then be sure they
-			// are not an admin in the role table
-			error_log("removing admin for $uin");
-			$userGroupDao->removeUserFromGroup($userId, $adminId, 0);
-		}
+//		$adminsStr = $this->_plugin->getSetting(
+//			$this->_contextId,
+//			'shibbolethAdminUins'
+//		);
+//		$admins = explode(' ', $adminsStr);
+//
+//		$uin = $user->getAuthStr();
+//		if (empty($uin)) {
+//			return;
+//		}
+//
+//		$userId = $user->getId();
+//		$adminFound = array_search($uin, $admins);
+//
+//		$userGroupDao = DAORegistry::getDAO('UserGroupDAO');
+//
+//		// should be unique
+//		$adminGroup = $userGroupDao->getByRoleId(0, ROLE_ID_SITE_ADMIN)->next();
+//		$adminId = $adminGroup->getId();
+//
+//		// If they are in the list of users who should be admins
+//		if ($adminFound !== false) {
+//			// and if they are not already an admin
+//			if(!$userGroupDao->userInGroup($userId, $adminId)) {
+//				syslog(LOG_INFO, "Shibboleth assigning admin to $uin");
+//				$userGroupDao->assignUserToGroup($userId, $adminId);
+//			}
+//		} else {
+//			// If they are not in the admin list - then be sure they
+//			// are not an admin in the role table
+//			error_log("removing admin for $uin");
+//			$userGroupDao->removeUserFromGroup($userId, $adminId, 0);
+//		}
 	}
 
 	/**
