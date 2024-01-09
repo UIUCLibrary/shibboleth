@@ -259,7 +259,7 @@ class ShibbolethHandler extends Handler {
 		}
 
 		// Try to locate the user by UIN.
-		$user = Repo::user()->get($uin, true);
+		$user = Repo::user()->get(strval($uin), true);
 		if (isset($user)) {
 			syslog(LOG_INFO, "Shibboleth located returning user $uin");
 		} else {
