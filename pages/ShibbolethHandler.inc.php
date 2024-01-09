@@ -15,6 +15,7 @@
 
 use APP\handler\Handler;
 use APP\facades\Repo;
+use PKP\pages\user\RegistrationHandler;
 class ShibbolethHandler extends Handler {
 	/** @var ShibbolethAuthPlugin */
 	var $_plugin;
@@ -403,9 +404,9 @@ class ShibbolethHandler extends Handler {
 	 * @copydoc ShibbolethHandler::activateUser()
 	 */
 	function validate($requiredContexts = null, $request = null) {
-		import('lib.pkp.pages.user.RegistrationHandler');
 		if ( True ) {
-			return RegistrationHandler::validate($requiredContexts, $request);
+            $registrationHandler = new RegistrationHandler();
+			return $registrationHandler->validate($requiredContexts, $request);
 		} else {
 			return $this->_shibbolethRedirect($request);
 		}
