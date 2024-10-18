@@ -483,7 +483,7 @@ class ShibbolethHandler extends Handler {
 //			return $request->redirect($context->getPath(), 'dashboard');
 //		}
 
-		return $request->redirectHome();
+		return $request->redirect(null, 'index');
 	}
 
 	/**
