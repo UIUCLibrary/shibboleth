@@ -13,6 +13,7 @@
  * @brief Form for managers to modify Shibboleth
  * authentication plugin settings
  */
+namespace APP\plugins\generic\shibboleth;
 
 use PKP\form\Form;
 class ShibbolethSettingsForm extends Form {

@@ -15,6 +15,8 @@
  * Assumes Apache mod_shib and appropriate configuration.
  */
 
+namespace APP\plugins\generic\shibboleth;
+
 use PKP\plugins\GenericPlugin;
 use PKP\plugins\Hook;
 define('SHIBBOLETH_PLUGIN_NAME', 'ShibbolethAuthPlugin');

@@ -12,10 +12,12 @@
  *
  * @brief Handle Shibboleth responses
  */
+namespace APP\plugins\generic\shibboleth;
 
 use APP\handler\Handler;
 use APP\facades\Repo;
 use PKP\pages\user\RegistrationHandler;
+
 class ShibbolethHandler extends Handler {
 	/** @var ShibbolethAuthPlugin */
 	var $_plugin;
