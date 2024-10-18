@@ -92,37 +92,53 @@ class ShibbolethAuthPlugin extends GenericPlugin {
 	/**
 	 * @copydoc Plugin::manage()
 	 */
-	function manage($args, $request) {
-		switch ($request->getUserVar('verb')) {
-			case 'settings':
-				AppLocale::requireComponents(
-					LOCALE_COMPONENT_APP_COMMON,
-					LOCALE_COMPONENT_PKP_MANAGER
-				);
-				$templateMgr = TemplateManager::getManager($request);
-				$templateMgr->register_function(
-					'plugin_url',
-					array($this, 'smartyPluginUrl')
-				);
+	function manage($args, $request): JSONMessage
+    {
+        if ($request->getUserVar('verb') !== 'settings') {
+            return parent::manage($args, $request);
+        }
+        $form = new ShibbolethSettingsForm($this, $request->getContext()->getId());
+        if (!$request->getUserVar('save')) {
+            $form->initData();
+            return new JSONMessage(true, $form->fetch($request));
+        }
 
-				$this->import('ShibbolethSettingsForm');
-				$form = new ShibbolethSettingsForm(
-					$this,
-					$this->_contextId
-				);
+        $form->readInputData();
+        if (!$form->validate()) {
+            return new JSONMessage(true, $form->fetch($request));
+        }
+        $form->execute();
+        $notificationManager = new NotificationManager();
+        $notificationManager->createTrivialNotification($request->getUser()->getId());
+        return new JSONMessage(true);
 
-				if ($request->getUserVar('save')) {
-					$form->readInputData();
-					if ($form->validate()) {
-						$form->execute();
-						return new JSONMessage(true);
-					}
-				} else {
-					$form->initData();
-				}
-				return new JSONMessage(true, $form->fetch($request));
-		}
-		return parent::manage($args, $request);
+//		switch ($request->getUserVar('verb')) {
+//			case 'settings':
+//
+//				$templateMgr = TemplateManager::getManager($request);
+//				$templateMgr->register_function(
+//					'plugin_url',
+//					array($this, 'smartyPluginUrl')
+//				);
+//
+//				$this->import('ShibbolethSettingsForm');
+//				$form = new ShibbolethSettingsForm(
+//					$this,
+//					$this->_contextId
+//				);
+//
+//				if ($request->getUserVar('save')) {
+//					$form->readInputData();
+//					if ($form->validate()) {
+//						$form->execute();
+//						return new JSONMessage(true);
+//					}
+//				} else {
+//					$form->initData();
+//				}
+//				return new JSONMessage(true, $form->fetch($request));
+//		}
+//		return parent::manage($args, $request);
 	}
 
 	/**
